@@ -56,4 +56,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Media::class, 'user_id');
     }
+
+    /**
+     * @return HasMany<Collection>
+     */
+    public function collections(): HasMany
+    {
+        return $this->hasMany(Collection::class, 'user_id');
+    }
 }

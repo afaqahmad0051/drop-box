@@ -23,8 +23,25 @@ class StoreMediaRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'media' => 'required|mimes:jpg,jpeg,png,mp4,mov,webm',
+            'dropbox_url' => 'required_without:media|nullable|url|regex:/^https?:\/\/(www\.)?dropbox\.com\//',
+            'media' => 'required_without:dropbox_url|nullable|mimes:jpg,jpeg,png,mp4,mov,webm',
             'description' => 'nullable|string',
+            'collection_ids' => 'nullable|array',
+            'collection_ids.*' => 'exists:collections,id',
         ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'media_url.required_without' => 'Please provide a Dropbox URL or upload a media file.',
+            'media_file.required_without' => 'Please upload a media file or provide a Dropbox URL.',
+            'media_url.regex' => 'The URL must be a valid Dropbox link.',
+        ];
+    }
+
+    public function isDropboxUrl(): bool
+    {
+        return $this->filled('dropbox_url');
     }
 }

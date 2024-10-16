@@ -16,16 +16,23 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+
     Route::prefix('collections')->controller(CollectionController::class)->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
         Route::get('{collection}', 'show');
         Route::put('{collection}', 'update');
         Route::delete('{collection}', 'destroy');
+        Route::post('{collection}/media', 'assignMedia');
+        Route::get('bulk-delete', 'bulkDelete');
     });
 
     Route::prefix('media')->controller(MediaController::class)->group(function () {
         Route::get('', 'index');
         Route::post('', 'store');
+        Route::put('{media}', 'update');
+        Route::post('{media}/collections', 'assignCollections');
+        Route::delete('{media}', 'destroy');
+        Route::get('bulk-delete', 'bulkDelete');
     });
 });
